@@ -1,0 +1,25 @@
+# Use a imagem base do Alpine
+FROM alpine:latest
+
+# Atualize os repositórios e instale as dependências necessárias
+RUN apk update && \
+    apk add --no-cache \
+    gcc \
+    make \
+    libc-dev \
+    libmicrohttpd-dev
+
+# Defina o diretório de trabalho como a raiz do seu projeto
+WORKDIR /app
+
+# Copie o código fonte do seu projeto para o contêiner
+COPY . .
+
+# Compile o servidor
+RUN cd server && make
+
+# Exponha a porta em que o servidor está sendo executado
+EXPOSE 8080
+
+# Comando para iniciar o servidor quando o contêiner for iniciado
+CMD ["./server/server"]

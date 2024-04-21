@@ -1,0 +1,20 @@
+module(name = "crat")
+
+bazel_dep(name = "curl", version = "8.4.0")
+
+archive_override(
+    module_name = "libmicrohttpd",
+    urls = "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-1.0.1.tar.gz",
+    strip_prefix = "libmicrohttpd-1.0.1",
+    patches = [
+        "add_build_file.patch",
+        "module_dot_bazel.pach",
+    ]
+)
+bazel_dep(name = "libmicrohttpd", version = "1.0.1")
+# single_version_override(
+#     module_name = "bazel_skylib",
+#     patch_strip = 1,
+#     patches = ["//:bazel_skylib.patch"],
+#     version = "1.2.0",
+# )
