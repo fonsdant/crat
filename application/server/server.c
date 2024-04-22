@@ -5,14 +5,14 @@
 
 #define PORT 8888
 
-static MHD_Result handle_request(void *cls, struct MHD_Connection *connection,
-				 const char *url, const char *method,
-				 const char *version, const char *upload_data,
-				 size_t *upload_data_size, void **con_cls)
+static enum MHD_Result
+handle_request(void *cls, struct MHD_Connection *connection, const char *url,
+	       const char *method, const char *version, const char *upload_data,
+	       size_t *upload_data_size, void **con_cls)
 {
 	const char *page = "<html><body>Hello World!</body></html>";
 	struct MHD_Response *response;
-	int ret;
+	enum MHD_Result ret;
 
 	response = MHD_create_response_from_buffer(strlen(page), (void *)page,
 						   MHD_RESPMEM_PERSISTENT);
@@ -31,8 +31,9 @@ int main()
 		fprintf(stderr, "Failed to start the server\n");
 		return EXIT_FAILURE;
 	}
+
 	printf("Server running on port %d\n", PORT);
-	getchar(); // Press Enter to terminate the server
+	getchar();
 
 	MHD_stop_daemon(daemon);
 	printf("Server has been stopped\n");
