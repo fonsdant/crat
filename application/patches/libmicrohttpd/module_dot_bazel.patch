@@ -1,0 +1,9 @@
+--- /dev/null	2024-04-21 16:02:56.927999950 -0300
++++ MODULE.bazel	2024-04-21 21:57:20.395211563 -0300
+@@ -0,0 +1,6 @@
++module(
++    name = "libmicrohttpd",
++    version = "1.0.1",
++)
++
++bazel_dep(name = "rules_foreign_cc", version = "0.10.1")

@@ -1,0 +1,16 @@
+--- /dev/null	2024-04-22 21:12:35.047999950 -0300
++++ BUILD	2024-04-22 22:03:35.201400109 -0300
+@@ -0,0 +1,13 @@
++load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
++
++filegroup(
++    name = "all_files",
++    srcs = glob(["**"]),
++)
++
++configure_make(
++    name = "libmicrohttpd",
++    lib_source = ":all_files",
++    linkopts = ["-lpthread"],
++    visibility = ["//visibility:public"],
++)
