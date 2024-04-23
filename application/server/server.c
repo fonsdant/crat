@@ -1,9 +1,18 @@
 #include <microhttpd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include <string.h>
+#include <signal.h>
 
 #define PORT 8888
+
+volatile sig_atomic_t keep_running = 1;
+
+void int_handler(int dummy)
+{
+	keep_running = 0;
+}
 
 static enum MHD_Result
 handle_request(void *cls, struct MHD_Connection *connection, const char *url,
@@ -25,6 +34,9 @@ handle_request(void *cls, struct MHD_Connection *connection, const char *url,
 int main()
 {
 	struct MHD_Daemon *daemon;
+
+	signal(SIGINT, int_handler);
+
 	daemon = MHD_start_daemon(MHD_USE_INTERNAL_POLLING_THREAD, PORT, NULL,
 				  NULL, &handle_request, NULL, MHD_OPTION_END);
 	if (daemon == NULL) {
@@ -33,7 +45,10 @@ int main()
 	}
 
 	printf("Server running on port %d\n", PORT);
-	getchar();
+
+	while (keep_running) {
+		sleep(1);
+	}
 
 	MHD_stop_daemon(daemon);
 	printf("Server has been stopped\n");

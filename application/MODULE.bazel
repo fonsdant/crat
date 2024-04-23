@@ -1,3 +1,7 @@
+"""
+C REST API Template
+"""
+
 module(name = "crat")
 
 bazel_dep(name = "libmicrohttpd", version = "1.0.1")

@@ -1,25 +1,11 @@
-# Use a imagem base do Alpine
-FROM alpine:latest
-
-# Atualize os repositórios e instale as dependências necessárias
-RUN apk update && \
-    apk add --no-cache \
-    gcc \
-    make \
-    libc-dev \
-    libmicrohttpd-dev
-
-# Defina o diretório de trabalho como a raiz do seu projeto
+FROM gcr.io/bazel-public/bazel:latest as builder
 WORKDIR /app
+COPY . /app
+USER root
+RUN bazel build //server --features=fully_static_link
 
-# Copie o código fonte do seu projeto para o contêiner
-COPY . .
-
-# Compile o servidor
-RUN cd server && make
-
-# Exponha a porta em que o servidor está sendo executado
-EXPOSE 8080
-
-# Comando para iniciar o servidor quando o contêiner for iniciado
-CMD ["./server/server"]
+FROM alpine:latest
+WORKDIR /app
+COPY --from=builder /app/build/bin/server/server ./server
+EXPOSE 8888
+ENTRYPOINT ["./server"]
